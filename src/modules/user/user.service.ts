@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from './user.repository';
 import { CreateUserDto } from 'src/common/dto/CreateUserDto';
 import { User } from './user.entity';
-import { UserRole } from 'src/domain/UserRole';
+import { UserRole } from 'src/shared/UserRole';
 
 @Injectable()
 export class UserService {
@@ -17,7 +17,7 @@ export class UserService {
     if (createUserDto.password != createUserDto.passwordConfirmation) {
       throw new UnprocessableEntityException('As senhas não conferem');
     } else {
-      return this.userRepository.createUser(createUserDto, UserRole.ADMIN);
+      return await this.userRepository.createUser(createUserDto, UserRole.ADMIN);
     }
   }
 }

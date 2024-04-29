@@ -3,9 +3,10 @@ import { ConflictException, Injectable, InternalServerErrorException } from '@ne
 import { DataSource, Repository } from 'typeorm';
 import { User } from './user.entity';
 import { CreateUserDto } from 'src/common/dto/CreateUserDto';
-import { UserRole } from 'src/domain/UserRole';
+import { UserRole } from 'src/shared/UserRole';
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
+import { CredentialsDto } from 'src/common/dto/CredentialsDto';
 
 @Injectable()
 export class UserRepository extends Repository<User> {
@@ -41,6 +42,17 @@ export class UserRepository extends Repository<User> {
           'Erro ao salvar o usuário no banco de dados'
         );
       }
+    }
+  }
+
+  async checkCredentials(credentialsDto: CredentialsDto): Promise<User> {
+    const { email, password } = credentialsDto;
+    const user = await this.findOne({ where: { email, status: true } });
+
+    if (user && (await user.checkPassword(password))) {
+      return user;
+    } else {
+      return null;
     }
   }
 

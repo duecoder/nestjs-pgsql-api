@@ -1,4 +1,4 @@
-import { User } from 'src/user/user.entity';
+import { User } from 'src/modules/user/user.entity';
 
 export class ReturnUserDto {
   user: User;
