@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, ValidationPipe } from '@nestjs/common';
 import { ReturnUserDto } from 'src/common/dto/ReturnUserDto';
 import { UserService } from './user.service';
 import { CreateUserDto } from 'src/common/dto/CreateUserDto';
@@ -10,7 +10,7 @@ export class UserController {
 
   @Post()
   async createAdminUser(
-    @Body() createUserDto: CreateUserDto,
+    @Body(ValidationPipe) createUserDto: CreateUserDto,
   ): Promise<ReturnUserDto> {
     const user = await this.usersService.createAdminUser(createUserDto);
     return {
