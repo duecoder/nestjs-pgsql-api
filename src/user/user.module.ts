@@ -1,11 +1,13 @@
 /* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserRepositoryAdapter } from './adapter/db/user-repository.adapter';
 import { UserService } from './user.service';
+import { UserController } from './user.controller';
+import { UserRepository } from './user.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserRepositoryAdapter])],
+  imports: [TypeOrmModule.forFeature([UserRepository])],
   providers: [UserService],
+  controllers: [UserController],
 })
 export class UserModule {}
