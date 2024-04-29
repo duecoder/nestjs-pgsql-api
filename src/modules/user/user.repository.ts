@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { User } from './user.entity';
 import { CreateUserDto } from 'src/common/dto/CreateUserDto';
@@ -54,6 +54,16 @@ export class UserRepository extends Repository<User> {
     } else {
       return null;
     }
+  }
+
+  async findUserById(userId: string): Promise<User> {
+    const user = await this.findOne({ where: { id: userId } });
+
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+
+    return user;
   }
 
   private async hashPassword(password: string, salt: string): Promise<string> {

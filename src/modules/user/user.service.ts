@@ -20,4 +20,8 @@ export class UserService {
       return await this.userRepository.createUser(createUserDto, UserRole.ADMIN);
     }
   }
+
+  async findUserById(userId: string): Promise<User> {
+    return await this.userRepository.findUserById(userId);
+  }
 }
