@@ -4,7 +4,7 @@ import { DataSource, Repository } from 'typeorm';
 import { User } from './user.entity';
 import { CreateUserDto } from 'src/common/dto/CreateUserDto';
 import { UserRole } from 'src/shared/UserRole';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import * as crypto from 'crypto';
 import { CredentialsDto } from 'src/common/dto/CredentialsDto';
 
@@ -14,7 +14,7 @@ export class UserRepository extends Repository<User> {
     super(User, dataSource.createEntityManager());
   }
 
-  async createUser(
+  public async createUser(
     createUserDto: CreateUserDto,
     role: UserRole,
   ): Promise<User> {
@@ -45,7 +45,7 @@ export class UserRepository extends Repository<User> {
     }
   }
 
-  async checkCredentials(credentialsDto: CredentialsDto): Promise<User> {
+  public async checkCredentials(credentialsDto: CredentialsDto): Promise<User> {
     const { email, password } = credentialsDto;
     const user = await this.findOne({ where: { email, status: true } });
 
@@ -56,8 +56,18 @@ export class UserRepository extends Repository<User> {
     }
   }
 
-  async findUserById(userId: string): Promise<User> {
+  public async findUserById(userId: string): Promise<User> {
     const user = await this.findOne({ where: { id: userId } });
+
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+
+    return user;
+  }
+
+  public async findUserByEmail(email: string): Promise<User> {
+    const user = await this.findOne({ where: { email: email } });
 
     if (!user) {
       throw new NotFoundException('Usuário não encontrado');

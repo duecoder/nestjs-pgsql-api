@@ -16,7 +16,7 @@ export class UserController {
 
   @Post()
   @Role(UserRole.ADMIN)
-  async createAdminUser(
+  public async createAdminUser(
     @Body(ValidationPipe) createUserDto: CreateUserDto,
   ): Promise<ReturnUserDto> {
     const user = await this.usersService.createAdminUser(createUserDto);
@@ -27,14 +27,29 @@ export class UserController {
     };
   }
 
-  @Get(':id')
+  @Get('/id/:id')
   @Role(UserRole.ADMIN)
-  async findUserById(@Param('id') id: string): Promise<ReturnUserDto> {
+  public async findUserById(@Param('id') id: string): Promise<ReturnUserDto> {
     if (!validateUUID(id)) {
       throw new BadRequestException('ID inválido. O ID deve ser um UUID válido.');
     }
 
     const user = await this.usersService.findUserById(id);
+
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado.');
+    }
+
+    return {
+      user,
+      message: 'Usuário encontrado.',
+    };
+  }
+
+  @Get('/email/:email')
+  @Role(UserRole.ADMIN)
+  public async findUserByEmail(@Param('email') email: string): Promise<ReturnUserDto> {
+    const user = await this.usersService.findUserByEmail(email);
 
     if (!user) {
       throw new NotFoundException('Usuário não encontrado.');

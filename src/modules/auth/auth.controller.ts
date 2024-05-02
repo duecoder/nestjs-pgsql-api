@@ -12,7 +12,7 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('/signup')
-  async signUp(
+  public async signUp(
     @Body(ValidationPipe) createUserDto: CreateUserDto,
   ): Promise<{ message: string }> {
     await this.authService.signUp(createUserDto);
@@ -22,7 +22,7 @@ export class AuthController {
   }
 
   @Post('/signin')
-  async signIn(
+  public async signIn(
     @Body(ValidationPipe) credentiaslsDto: CredentialsDto,
   ): Promise<{ token: string }> {
     return await this.authService.signIn(credentiaslsDto);
@@ -30,7 +30,7 @@ export class AuthController {
 
   @Get('/me')
   @UseGuards(AuthGuard())
-  getMe(@GetUser() user: User): User {
+  public getMe(@GetUser() user: User): User {
     return user;
   }
 }

@@ -13,7 +13,7 @@ export class UserService {
     private userRepository: UserRepository,
   ) {}
 
-  async createAdminUser(createUserDto: CreateUserDto): Promise<User> {
+  public async createAdminUser(createUserDto: CreateUserDto): Promise<User> {
     if (createUserDto.password != createUserDto.passwordConfirmation) {
       throw new UnprocessableEntityException('As senhas não conferem');
     } else {
@@ -21,7 +21,11 @@ export class UserService {
     }
   }
 
-  async findUserById(userId: string): Promise<User> {
+  public async findUserById(userId: string): Promise<User> {
     return await this.userRepository.findUserById(userId);
+  }
+
+  public async findUserByEmail(userId: string): Promise<User> {
+    return await this.userRepository.findUserByEmail(userId);
   }
 }
