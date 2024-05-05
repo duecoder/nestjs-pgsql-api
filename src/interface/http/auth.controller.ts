@@ -1,11 +1,11 @@
 /* eslint-disable prettier/prettier */
 import { Body, Controller, Get, Post, UseGuards, ValidationPipe } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { CreateUserDto } from 'src/common/dto/CreateUserDto';
-import { CredentialsDto } from 'src/common/dto/CredentialsDto';
+import { AuthService } from '../../app/service/auth.service';
+import { CreateUserDto } from 'src/app/common/dto/create-user.dto';
+import { CredentialsDto } from 'src/app/common/dto/credentials.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { User } from '../user/user.entity';
-import { GetUser } from './get-user.decorator';
+import { User } from '../../modules/user/user.entity';
+import { GetUser } from '../../app/decorator/get-user.decorator';
 
 @Controller('auth')
 export class AuthController {

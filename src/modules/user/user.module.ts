@@ -2,8 +2,8 @@
 import { PassportModule } from '@nestjs/passport';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserService } from './user.service';
-import { UserController } from './user.controller';
+import { UserService } from '../../app/service/user.service';
+import { UserController } from '../../interface/http/user.controller';
 import { UserRepository } from './user.repository';
 
 @Module({

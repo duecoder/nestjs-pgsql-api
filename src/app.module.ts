@@ -1,13 +1,13 @@
-import { UserController } from './modules/user/user.controller';
+import { UserController } from './interface/http/user.controller';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmConfig } from './config/typeorm.config';
 import { UserModule } from './modules/user/user.module';
 import { UserRepository } from './modules/user/user.repository';
-import { UserService } from './modules/user/user.service';
+import { UserService } from './app/service/user.service';
 import { AuthModule } from './modules/auth/auth.module';
-import { AuthService } from './modules/auth/auth.service';
-import { AuthController } from './modules/auth/auth.controller';
+import { AuthService } from './app/service/auth.service';
+import { AuthController } from './interface/http/auth.controller';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({

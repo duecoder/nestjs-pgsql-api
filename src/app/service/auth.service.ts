@@ -2,11 +2,11 @@
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable, UnauthorizedException, UnprocessableEntityException } from '@nestjs/common';
-import { UserRepository } from '../user/user.repository';
-import { CreateUserDto } from 'src/common/dto/CreateUserDto';
-import { User } from '../user/user.entity';
+import { UserRepository } from '../../modules/user/user.repository';
+import { CreateUserDto } from '../common/dto/create-user.dto';
+import { User } from '../../modules/user/user.entity';
 import { UserRole } from 'src/shared/UserRole';
-import { CredentialsDto } from 'src/common/dto/CredentialsDto';
+import { CredentialsDto } from '../common/dto/credentials.dto';
 
 @Injectable()
 export class AuthService {
