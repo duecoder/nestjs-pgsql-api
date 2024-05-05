@@ -1,5 +1,11 @@
-/* eslint-disable prettier/prettier */
-import { Body, Controller, Get, Post, UseGuards, ValidationPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  UseGuards,
+  ValidationPipe,
+} from '@nestjs/common';
 import { AuthService } from '../../app/service/auth.service';
 import { CreateUserDto } from 'src/app/common/dto/create-user.dto';
 import { CredentialsDto } from 'src/app/common/dto/credentials.dto';

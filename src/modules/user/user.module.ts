@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { PassportModule } from '@nestjs/passport';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';

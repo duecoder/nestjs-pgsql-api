@@ -1,5 +1,9 @@
-/* eslint-disable prettier/prettier */
-import { ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { DataSource, Repository, SelectQueryBuilder } from 'typeorm';
 import { User } from './user.entity';
 import { CreateUserDto } from 'src/app/common/dto/create-user.dto';
@@ -17,7 +21,7 @@ export class UserRepository extends Repository<User> {
 
   public async findUsers(
     queryDto: FindUsersQueryDto,
-  ): Promise<{ users: User[], total: number }> {
+  ): Promise<{ users: User[]; total: number }> {
     queryDto.status = queryDto.status === undefined ? true : queryDto.status;
     queryDto.page = queryDto.page < 1 ? 1 : queryDto.page;
     queryDto.limit = queryDto.limit > 100 ? 100 : queryDto.limit;
@@ -27,7 +31,7 @@ export class UserRepository extends Repository<User> {
     query.where('user.status = :status', { status });
 
     if (email) {
-      query.andWhere('user.email ILIKE :email', { email : `%${email}%`});
+      query.andWhere('user.email ILIKE :email', { email: `%${email}%` });
     }
 
     if (name) {
@@ -41,9 +45,15 @@ export class UserRepository extends Repository<User> {
     query.skip((queryDto.page - 1) * queryDto.limit);
     query.take(+queryDto.limit);
     query.orderBy(queryDto.sort ? JSON.parse(queryDto.sort) : undefined);
-    query.select(['user.id', 'user.name', 'user.email', 'user.role', 'user.status']);
+    query.select([
+      'user.id',
+      'user.name',
+      'user.email',
+      'user.role',
+      'user.status',
+    ]);
 
-    const [ users, total ] = await query.getManyAndCount();
+    const [users, total] = await query.getManyAndCount();
 
     return { users, total };
   }
@@ -64,7 +74,7 @@ export class UserRepository extends Repository<User> {
     user.password = await this.hashPassword(password, user.salt);
 
     try {
-      const savedUser: User = await this.save(user); 
+      const savedUser: User = await this.save(user);
       delete savedUser.password;
       delete savedUser.salt;
       return savedUser;
@@ -73,7 +83,7 @@ export class UserRepository extends Repository<User> {
         throw new ConflictException('Endereço de email já está em uso');
       } else {
         throw new InternalServerErrorException(
-          'Erro ao salvar o usuário no banco de dados'
+          'Erro ao salvar o usuário no banco de dados',
         );
       }
     }

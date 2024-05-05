@@ -1,8 +1,20 @@
-/* eslint-disable prettier/prettier */
-import { BadRequestException, Body, Controller, Delete, ForbiddenException, Get, NotFoundException, Param, Patch, Post, Query, UseGuards, ValidationPipe } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  ForbiddenException,
+  Get,
+  NotFoundException,
+  Param,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+  ValidationPipe,
+} from '@nestjs/common';
 import { validate as validateUUID } from 'uuid';
 import { ReturnUserDto } from 'src/app/common/dto/return-user.dto';
-import { UserService } from '../../app/service/user.service';
 import { CreateUserDto } from 'src/app/common/dto/create-user.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { Role } from '../../app/decorator/role.decorator';
@@ -12,19 +24,20 @@ import { UpdateUserDto } from 'src/app/common/dto/update-user.dto';
 import { GetUser } from 'src/app/decorator/get-user.decorator';
 import { User } from 'src/modules/user/user.entity';
 import { FindUsersQueryDto } from 'src/modules/user/find-users-query.dto';
+import { UserService } from 'src/app/service/user.service';
 
 @Controller('user')
 @UseGuards(AuthGuard(), RolesGuard)
 export class UserController {
-  constructor(private usersService: UserService) {}
+  constructor(private userService: UserService) {}
 
   @Post()
   @Role(UserRole.ADMIN)
   public async createAdminUser(
     @Body(ValidationPipe) createUserDto: CreateUserDto,
   ): Promise<ReturnUserDto> {
-    const user = await this.usersService.createAdminUser(createUserDto);
-    
+    const user = await this.userService.createAdminUser(createUserDto);
+
     return {
       user,
       message: 'Administrador cadastrado com sucesso',
@@ -35,10 +48,12 @@ export class UserController {
   @Role(UserRole.ADMIN)
   public async findUserById(@Param('id') id: string): Promise<ReturnUserDto> {
     if (!validateUUID(id)) {
-      throw new BadRequestException('ID inválido. O ID deve ser um UUID válido.');
+      throw new BadRequestException(
+        'ID inválido. O ID deve ser um UUID válido.',
+      );
     }
 
-    const user = await this.usersService.findUserById(id);
+    const user = await this.userService.findUserById(id);
 
     if (!user) {
       throw new NotFoundException('Usuário não encontrado.');
@@ -52,8 +67,10 @@ export class UserController {
 
   @Get('/email/:email')
   @Role(UserRole.ADMIN)
-  public async findUserByEmail(@Param('email') email: string): Promise<ReturnUserDto> {
-    const user = await this.usersService.findUserByEmail(email);
+  public async findUserByEmail(
+    @Param('email') email: string,
+  ): Promise<ReturnUserDto> {
+    const user = await this.userService.findUserByEmail(email);
 
     if (!user) {
       throw new NotFoundException('Usuário não encontrado.');
@@ -72,28 +89,30 @@ export class UserController {
     @Param(':id') id: string,
   ) {
     if (user.role != UserRole.ADMIN && user.id && user.id.toString() != id) {
-      throw new ForbiddenException('Você não tem autorização para acessar esse recurso')
+      throw new ForbiddenException(
+        'Você não tem autorização para acessar esse recurso',
+      );
     } else {
-      return this.usersService.updateUser(updateUserDto, id);
+      return this.userService.updateUser(updateUserDto, id);
     }
   }
 
   @Delete(':id')
   @Role(UserRole.ADMIN)
   public async deleteUser(@Param('id') id: string) {
-    await this.usersService.deleteUser(id);
+    await this.userService.deleteUser(id);
     return {
       message: 'Usuário removido com sucesso',
-    }
+    };
   }
 
   @Get()
   @Role(UserRole.ADMIN)
   public async findUsers(@Query() query: FindUsersQueryDto) {
-    const found = await this.usersService.findUsers(query);
+    const found = await this.userService.findUsers(query);
     return {
-      found, 
+      found,
       message: 'Usuários encontrados',
-    }
+    };
   }
 }
