@@ -25,14 +25,14 @@ export class AuthService {
 	}
 
 	public async signIn(credentialsDto: CredentialsDto) {
-    	const user = await this.userRepository.checkCredentials(credentialsDto);
+    	const user: User = await this.userRepository.checkCredentials(credentialsDto);
 
 		if (user === null) {
 			throw new UnauthorizedException('Credenciais inválidas');
 		}
-		const jwtPayload = { id: user.id, };
-		
-		const token = await this.jwtService.signAsync(jwtPayload);
+
+		const jwtPayload: any = { id: user.id, };
+		const token: string = await this.jwtService.signAsync(jwtPayload);
 
 		return { token };
   	}

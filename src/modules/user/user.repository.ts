@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, Repository, SelectQueryBuilder } from 'typeorm';
 import { User } from './user.entity';
 import { CreateUserDto } from 'src/app/common/dto/create-user.dto';
 import { UserRole } from 'src/shared/UserRole';
@@ -23,7 +23,7 @@ export class UserRepository extends Repository<User> {
     queryDto.limit = queryDto.limit > 100 ? 100 : queryDto.limit;
 
     const { email, name, status, role } = queryDto;
-    const query = this.createQueryBuilder('user');
+    const query: SelectQueryBuilder<User> = this.createQueryBuilder('user');
     query.where('user.status = :status', { status });
 
     if (email) {
@@ -54,7 +54,7 @@ export class UserRepository extends Repository<User> {
   ): Promise<User> {
     const { email, name, password } = createUserDto;
 
-    const user = new User();
+    const user: User = new User();
     user.email = email;
     user.name = name;
     user.role = role;
@@ -64,7 +64,7 @@ export class UserRepository extends Repository<User> {
     user.password = await this.hashPassword(password, user.salt);
 
     try {
-      const savedUser = await this.save(user); 
+      const savedUser: User = await this.save(user); 
       delete savedUser.password;
       delete savedUser.salt;
       return savedUser;
@@ -81,7 +81,7 @@ export class UserRepository extends Repository<User> {
 
   public async checkCredentials(credentialsDto: CredentialsDto): Promise<User> {
     const { email, password } = credentialsDto;
-    const user = await this.findOne({ where: { email, status: true } });
+    const user: User = await this.findOne({ where: { email, status: true } });
 
     if (user && (await user.checkPassword(password))) {
       return user;
@@ -91,7 +91,7 @@ export class UserRepository extends Repository<User> {
   }
 
   public async findUserById(userId: string): Promise<User> {
-    const user = await this.findOne({ where: { id: userId } });
+    const user: User = await this.findOne({ where: { id: userId } });
 
     if (!user) {
       throw new NotFoundException('Usuário não encontrado');
@@ -101,7 +101,7 @@ export class UserRepository extends Repository<User> {
   }
 
   public async findUserByEmail(email: string): Promise<User> {
-    const user = await this.findOne({ where: { email: email } });
+    const user: User = await this.findOne({ where: { email: email } });
 
     if (!user) {
       throw new NotFoundException('Usuário não encontrado');

@@ -4,6 +4,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from '../user/user.repository';
 import { jwtConstants } from './constants';
+import { User } from '../user/user.entity';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -18,9 +19,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   public async validate(payload: { id: string }) {
-    const { id } = payload;
+    const { id }: any = payload;
 
-    const user = await this.userRepository.findOne({
+    const user: User = await this.userRepository.findOne({
       where: { id },
       select: ['name', 'email', 'status', 'role'],
     });

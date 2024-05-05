@@ -1,6 +1,6 @@
-import { BaseQueryParametersDto } from 'src/shared/base-query-params.dto';
+import { BaseQueryParameters } from 'src/shared/BaseQueryParameters';
 
-export class FindUsersQueryDto extends BaseQueryParametersDto {
+export class FindUsersQueryDto extends BaseQueryParameters {
   name: string;
   email: string;
   status: boolean;

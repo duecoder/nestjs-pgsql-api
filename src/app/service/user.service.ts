@@ -7,6 +7,7 @@ import { User } from '../../modules/user/user.entity';
 import { UserRole } from 'src/shared/UserRole';
 import { UpdateUserDto } from '../common/dto/update-user.dto';
 import { FindUsersQueryDto } from 'src/modules/user/find-users-query.dto';
+import { DeleteResult } from 'typeorm';
 
 @Injectable()
 export class UserService {
@@ -32,7 +33,7 @@ export class UserService {
   }
 
   public async updateUser(updateUserDto: UpdateUserDto, id: string): Promise<User> {
-    const user = await this.findUserById(id);
+    const user: User = await this.findUserById(id);
     const { name, email, role, status } = updateUserDto;
     user.name = name ? name: user.name;
     user.email = email ? email : user.email;
@@ -47,14 +48,14 @@ export class UserService {
   }
 
   public async deleteUser(userId: string) {
-    const result = await this.userRepository.delete({ id: userId });
+    const result: DeleteResult = await this.userRepository.delete({ id: userId });
     if (result.affected === 0) {
       throw new NotFoundException('Não foi encontrado um usuário com o ID informado')
     }
   }
 
   public async findUsers(queryDto: FindUsersQueryDto): Promise<{ users: User[], total: number }> {
-    const users = await this.userRepository.findUsers(queryDto);
+    const users: any = await this.userRepository.findUsers(queryDto);
     return users;
   }
 }

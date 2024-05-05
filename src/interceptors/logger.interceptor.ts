@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { Logger } from 'winston';
 import { Observable } from 'rxjs';
+import { User } from 'src/modules/user/user.entity';
 
 @Injectable()
 export class LoggerInterceptor implements NestInterceptor {
@@ -17,11 +18,11 @@ export class LoggerInterceptor implements NestInterceptor {
   }
 
   private log(req: any) {
-    const body = { ...req.body };
+    const body: any = { ...req.body };
     delete body.password;
     delete body.passwordConfirmation;
-    const user = (req as any).user;
-    const userEmail = user ? user.email : null;
+    const user: User = (req as any).user;
+    const userEmail: string = user ? user.email : null;
     this.logger.info({
       timestamp: new Date().toISOString(),
       method: req.method,
