@@ -71,7 +71,7 @@ export class UserController {
     @GetUser() user: User,
     @Param(':id') id: string,
   ) {
-    if (user.role != UserRole.ADMIN && user.id.toString() != id) {
+    if (user.role != UserRole.ADMIN && user.id && user.id.toString() != id) {
       throw new ForbiddenException('Você não tem autorização para acessar esse recurso')
     } else {
       return this.usersService.updateUser(updateUserDto, id);
